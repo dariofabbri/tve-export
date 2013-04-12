@@ -87,7 +87,7 @@ public class TestMarshalling extends XMLTestCase {
 		fornitore.setDescrizione("TVE VIGILANZA L. S.r.l.");
 		fornitore.setDescrizione2("ISTITUTO di VIGILANZA");
 		fornitore.setIndirizzo("Via del Podere Fiume n. 4");
-		fornitore.setCitta("Roma");
+		fornitore.setCitta("ROMA");
 		fornitore.setProvincia("RM");
 		fornitore.setCap("00168");
 		fornitore.setCodicePaese("ITA");
@@ -106,7 +106,7 @@ public class TestMarshalling extends XMLTestCase {
 		Cliente cliente = new Cliente();
 		cliente.setDescrizione("A.S.L. RM A");
 		cliente.setIndirizzo("Via Ariosto, 3-9");
-		cliente.setCitta("Roma");
+		cliente.setCitta("ROMA");
 		cliente.setProvincia("RM");
 		cliente.setCap("00185");
 		cliente.setCodicePaese("ITA");
@@ -132,12 +132,12 @@ public class TestMarshalling extends XMLTestCase {
 		prodotto.setCodiceProdotto("PIANTON");
 		prodotto.setCodificaProdotto("CODICE_FORNITORE");
 		prodotto.setDescrizione("Pianton.: Via Lampedusa, 23");
-		prodotto.setQuantita("88");
+		prodotto.setQuantita("88.0000");
 		prodotto.setUnitaMisura("ORE");
 		documento.getProdotti().add(prodotto);
 		
 		ImportoProdotto importoProdotto = new ImportoProdotto();
-		importoProdotto.setImponibile("1452");
+		importoProdotto.setImponibile("1452.00");
 		prodotto.setImporto(importoProdotto);
 		
 		Prezzo prezzo = new Prezzo();
@@ -152,7 +152,7 @@ public class TestMarshalling extends XMLTestCase {
 		prodotto.setCodiceProdotto("PIANTON");
 		prodotto.setCodificaProdotto("CODICE_FORNITORE");
 		prodotto.setDescrizione("Pianton.: Via Dina Galli, 3");
-		prodotto.setQuantita("231.5");
+		prodotto.setQuantita("231.5000");
 		prodotto.setUnitaMisura("ORE");
 		documento.getProdotti().add(prodotto);
 		
@@ -172,7 +172,7 @@ public class TestMarshalling extends XMLTestCase {
 		prodotto.setCodiceProdotto("PIANTON");
 		prodotto.setCodificaProdotto("CODICE_FORNITORE");
 		prodotto.setDescrizione("Pianton.: Via Dina Galli, 8");
-		prodotto.setQuantita("49.5");
+		prodotto.setQuantita("49.5000");
 		prodotto.setUnitaMisura("ORE");
 		documento.getProdotti().add(prodotto);
 		
@@ -192,7 +192,7 @@ public class TestMarshalling extends XMLTestCase {
 		prodotto.setCodiceProdotto("PIANTON");
 		prodotto.setCodificaProdotto("CODICE_FORNITORE");
 		prodotto.setDescrizione("Pianton.: SERT - Via Montesacro, 8");
-		prodotto.setQuantita("321.5");
+		prodotto.setQuantita("321.5000");
 		prodotto.setUnitaMisura("ORE");
 		documento.getProdotti().add(prodotto);
 		
@@ -212,7 +212,7 @@ public class TestMarshalling extends XMLTestCase {
 		prodotto.setCodiceProdotto("PIANTON");
 		prodotto.setCodificaProdotto("CODICE_FORNITORE");
 		prodotto.setDescrizione("Pianton.: SERT - Largo Rovani,");
-		prodotto.setQuantita("178");
+		prodotto.setQuantita("178.0000");
 		prodotto.setUnitaMisura("ORE");
 		documento.getProdotti().add(prodotto);
 		
@@ -232,7 +232,7 @@ public class TestMarshalling extends XMLTestCase {
 		prodotto.setCodiceProdotto("PRONTOINT");
 		prodotto.setCodificaProdotto("CODICE_FORNITORE");
 		prodotto.setDescrizione("Pronto int.: n. 1 passaggio notturno presso Via D. Nicodemi, 105");
-		prodotto.setQuantita("31");
+		prodotto.setQuantita("31.00");
 		prodotto.setUnitaMisura("ACCESSI");
 		documento.getProdotti().add(prodotto);
 		
@@ -252,7 +252,7 @@ public class TestMarshalling extends XMLTestCase {
 		prodotto.setCodiceProdotto("PRONTOINT");
 		prodotto.setCodificaProdotto("CODICE_FORNITORE");
 		prodotto.setDescrizione("Pronto int.: n. 1 passaggio notturno presso Via Lampedusa, 23");
-		prodotto.setQuantita("31");
+		prodotto.setQuantita("31.00");
 		prodotto.setUnitaMisura("ACCESSI");
 		documento.getProdotti().add(prodotto);
 		
@@ -272,7 +272,7 @@ public class TestMarshalling extends XMLTestCase {
 		prodotto.setCodiceProdotto("PRONTOINT");
 		prodotto.setCodificaProdotto("CODICE_FORNITORE");
 		prodotto.setDescrizione("Pronto int.: n. 1 passaggio notturno presso Via D. Galli, 3/8");
-		prodotto.setQuantita("31");
+		prodotto.setQuantita("31.00");
 		prodotto.setUnitaMisura("ACCESSI");
 		documento.getProdotti().add(prodotto);
 		

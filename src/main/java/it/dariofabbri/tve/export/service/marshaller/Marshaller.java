@@ -5,7 +5,8 @@ import it.dariofabbri.tve.export.model.Documento;
 import it.dariofabbri.tve.export.model.Fornitore;
 import it.dariofabbri.tve.export.model.Messaggio;
 import it.dariofabbri.tve.export.model.RiferimentoDocumento;
-import it.dariofabbri.tve.export.service.configuration.Configuration;
+import it.dariofabbri.tve.export.service.configurator.Configuration;
+import it.dariofabbri.tve.export.service.configurator.Configurator;
 
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -19,10 +20,12 @@ import javax.xml.bind.JAXBContext;
 public class Marshaller {
 
 	private SimpleDateFormat sdf;
+	private Configurator configurator;
 	
 	public Marshaller() {
 		
 		sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		configurator = new Configurator();
 	}
 	
 	
@@ -73,7 +76,14 @@ public class Marshaller {
 		
 		// Retrieve configuration.
 		//
-		Configuration configuration = Configuration.getInstance();
+		Configuration configuration = configurator.load();
+		if(configuration == null) {
+			throw new RuntimeException("Unable to load configuration.");
+		}
+		if(!configuration.isValid()) {
+			throw new RuntimeException("Loaded configuration is not valid.");
+		}
+		
 		Fornitore fornitore = configuration.getFornitore();
 
 		// Build fixed riferimento documento object.

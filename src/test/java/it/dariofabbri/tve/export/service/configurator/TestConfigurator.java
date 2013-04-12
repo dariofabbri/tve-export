@@ -1,19 +1,20 @@
-package it.dariofabbri.tve.export.service.configuration;
+package it.dariofabbri.tve.export.service.configurator;
 
 import junit.framework.Assert;
 import it.dariofabbri.tve.export.model.DatiFiscali;
 import it.dariofabbri.tve.export.model.Fornitore;
-import it.dariofabbri.tve.export.service.configuration.Configuration;
+import it.dariofabbri.tve.export.service.configurator.Configuration;
 
 import org.junit.Test;
 
-public class TestConfiguration {
+public class TestConfigurator {
+
+	private Configurator configurator = new Configurator();
 
 	@Test
 	public void test1() {
 		
-		Configuration configuration = Configuration.getInstance();
-		configuration.reset();
+		Configuration configuration = new Configuration();
 		
 		Fornitore fornitore = configuration.getFornitore();
 		fornitore.setDescrizione("TVE VIGILANZA L. S.r.l.");
@@ -30,16 +31,14 @@ public class TestConfiguration {
 		datiFiscaliFornitore.setNumeroRegistroImprese("1013892");
 		fornitore.setDatiFiscali(datiFiscaliFornitore);
 
-		configuration.save();
+		configurator.save(configuration);
 	}
 
 	
 	@Test
 	public void test2() {
 		
-		Configuration configuration = Configuration.getInstance();
-		configuration.reset();
-		configuration.load();
+		Configuration configuration = configurator.load();
 		
 		Assert.assertEquals("TVE VIGILANZA L. S.r.l.", configuration.getFornitore().getDescrizione());
 		Assert.assertEquals("ISTITUTO di VIGILANZA", configuration.getFornitore().getDescrizione2());
@@ -57,9 +56,10 @@ public class TestConfiguration {
 	@Test
 	public void test3() {
 		
-		Configuration configuration = Configuration.getInstance();
+		Configuration configuration = new Configuration();
 		Assert.assertFalse(configuration.isValid());
-		configuration.load();
+		
+		configuration = configurator.load();
 		Assert.assertTrue(configuration.isValid());
 	}
 }
