@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Messaggio>
+  
+  <DatiTrasmissione>
+    <Identificativo>752cff7f-6701-44fc-aa96-ccfddb9e68a4</Identificativo>
+    <DataCreazione>2013-02-28</DataCreazione>
+    <DataTrasmissione>2013-02-28</DataTrasmissione>
+  </DatiTrasmissione>
+
+  <Documento>
+
+    <TipoDocumento>FATTURA</TipoDocumento>
+    <Produzione>ORIGINALE</Produzione>
+    <NumeroDocumento>104</NumeroDocumento>
+    <DataDocumento>2013-02-04</DataDocumento>
+    <Valuta>EUR</Valuta>
+    
+    <!-- Check if this text is needed -->
+    <TestoLibero>  
+      <Progressivo>1</Progressivo>
+      <Testo1>Ci pregiamo sottoporVi la presente fattura per i seguenti servizi :</Testo1>
+      <Testo2>(periodo Gennaio 2013)</Testo2>
+    </TestoLibero>
+
+    <!-- This will have to be manually set while generating the XML file -->   
+    <RiferimentoDocumento>
+      <TipoDocumento>SERVIZI</TipoDocumento>
+      <!-- Not required if TipoDocumento is SERVIZI, ORDINE_NON_PRESENTE, ORDINE_NON_APPLICABILE -->
+      <DataDocumento/>
+      <NumeroDocumento/>
+    </RiferimentoDocumento>
+
+    <!-- This element will be set through app settings. -->
+    <Fornitore>
+
+      <Descrizione>TVE VIGILANZA L. S.r.l.</Descrizione>
+      <Descrizione2>ISTITUTO di VIGILANZA</Descrizione2>
+      <Indirizzo>Via del Podere Fiume n. 4</Indirizzo>
+      <Citta>ROMA</Citta>
+      <Provincia>RM</Provincia>
+      <CAP>00168</CAP>
+      <CodicePaese>ITA</CodicePaese>
+
+      <DatiFiscali>
+        <PartitaIVA>07147091008</PartitaIVA>
+        <CapitaleSociale>10000€</CapitaleSociale>
+        <NumeroRegistroImprese>1013892</NumeroRegistroImprese>
+      </DatiFiscali>
+
+      <!-- Captured from PDF document -->
+      <RiferimentiBancari>
+        <IBAN>IT14E0503403239000000216029</IBAN>
+      </RiferimentiBancari>
+
+    </Fornitore>
+
+
+    <!-- Data taken from the PDF header -->
+    <Cliente>
+
+      <Descrizione>A.S.L. RM A</Descrizione>
+      <Indirizzo>Via Ariosto, 3-9</Indirizzo>
+      <Citta>ROMA</Citta>
+      <Provincia>RM</Provincia>
+      <CAP>00185</CAP>
+      <CodicePaese>ITA</CodicePaese>  <!-- Fixed -->
+
+      <DatiFiscali>
+        <PartitaIVA>04735671002</PartitaIVA>
+      </DatiFiscali>
+
+    </Cliente>
+
+    <!--
+    <DestinazioneMerce/>
+    <IndirizzoEmittente/>
+    <IndirizzoDestinatarioFattura/>
+    -->
+
+    <!-- Generated from text extracted from PDF file, through a lookup table. -->
+    <CondizioniPagamento>
+      <Strumento>BONIFICO</Strumento>
+      <Termini>FINE_MESE_DATA_FATTURA</Termini>
+      <Giorni>90</Giorni>
+    </CondizioniPagamento>
+
+    <!--
+    <CondizioniTrasporto/>
+    <Credito/>
+    ...
+    <Credito/>
+    -->
+
+    <Dettaglio>
+
+      <Prodotto>
+
+        <Progressivo>1</Progressivo>
+        <CodiceProdotto>PIANTON</CodiceProdotto>
+        <CodificaProdotto>CODICE_FORNITORE</CodificaProdotto>
+        <!--
+        <CIG/>
+        <CUP/>
+        -->
+        <Descrizione>Pianton.: Via Lampedusa, 23</Descrizione>
+        <Quantita>88.0000</Quantita>
+        <UnitaMisura>ORE</UnitaMisura>
+
+        <Importo>
+          <Imponibile>1452.00</Imponibile>
+        </Importo>
+
+        <Prezzo>
+          <PrezzoCessione>16.50</PrezzoCessione>
+        </Prezzo>
+
+        <!--
+        <Tasse>
+          <PercentualeIVA></PercentualeIVA>
+          <Imponibile></Imponibile>
+          <ImportoTassa></ImportoTassa>
+        </Tasse>
+        -->
+
+      </Prodotto>
+
+
+      <Prodotto>
+
+        <Progressivo>2</Progressivo>
+        <CodiceProdotto>PIANTON</CodiceProdotto>
+        <CodificaProdotto>CODICE_FORNITORE</CodificaProdotto>
+        <Descrizione>Pianton.: Via Dina Galli, 3</Descrizione>
+        <Quantita>231.5000</Quantita>
+        <UnitaMisura>ORE</UnitaMisura>
+
+        <Importo>
+          <Imponibile>5257.36</Imponibile>
+        </Importo>
+
+        <Prezzo>
+          <PrezzoCessione>22.71</PrezzoCessione>
+        </Prezzo>
+
+      </Prodotto>
+
+
+      <Prodotto>
+
+        <Progressivo>3</Progressivo>
+        <CodiceProdotto>PIANTON</CodiceProdotto>
+        <CodificaProdotto>CODICE_FORNITORE</CodificaProdotto>
+        <Descrizione>Pianton.: Via Dina Galli, 8</Descrizione>
+        <Quantita>49.5000</Quantita>
+        <UnitaMisura>ORE</UnitaMisura>
+
+        <Importo>
+          <Imponibile>1124.14</Imponibile>
+        </Importo>
+
+        <Prezzo>
+          <PrezzoCessione>22.71</PrezzoCessione>
+        </Prezzo>
+
+      </Prodotto>
+
+
+      <Prodotto>
+
+        <Progressivo>4</Progressivo>
+        <CodiceProdotto>PIANTON</CodiceProdotto>
+        <CodificaProdotto>CODICE_FORNITORE</CodificaProdotto>
+        <Descrizione>Pianton.: SERT - Via Montesacro, 8</Descrizione>
+        <Quantita>321.5000</Quantita>
+        <UnitaMisura>ORE</UnitaMisura>
+
+        <Importo>
+          <Imponibile>7301.26</Imponibile>
+        </Importo>
+
+        <Prezzo>
+          <PrezzoCessione>22.71</PrezzoCessione>
+        </Prezzo>
+
+      </Prodotto>
+
+
+      <Prodotto>
+
+        <Progressivo>5</Progressivo>
+        <CodiceProdotto>PIANTON</CodiceProdotto>
+        <CodificaProdotto>CODICE_FORNITORE</CodificaProdotto>
+        <Descrizione>Pianton.: SERT - Largo Rovani,</Descrizione>
+        <Quantita>178.0000</Quantita>
+        <UnitaMisura>ORE</UnitaMisura>
+
+        <Importo>
+          <Imponibile>4042.38</Imponibile>
+        </Importo>
+
+        <Prezzo>
+          <PrezzoCessione>22.71</PrezzoCessione>
+        </Prezzo>
+
+      </Prodotto>
+
+
+      <Prodotto>
+
+        <Progressivo>6</Progressivo>
+        <CodiceProdotto>PRONTOINT</CodiceProdotto>
+        <CodificaProdotto>CODICE_FORNITORE</CodificaProdotto>
+        <Descrizione>Pronto int.: n. 1 passaggio notturno presso Via D. Nicodemi, 105</Descrizione>
+        <Quantita>31.00</Quantita>
+        <UnitaMisura>ACCESSI</UnitaMisura>
+
+        <Importo>
+          <Imponibile>29.45</Imponibile>
+        </Importo>
+
+        <Prezzo>
+          <PrezzoCessione>0.95</PrezzoCessione>
+        </Prezzo>
+
+      </Prodotto>
+
+
+      <Prodotto>
+
+        <Progressivo>7</Progressivo>
+        <CodiceProdotto>PRONTOINT</CodiceProdotto>
+        <CodificaProdotto>CODICE_FORNITORE</CodificaProdotto>
+        <Descrizione>Pronto int.: n. 1 passaggio notturno presso Via Lampedusa, 23</Descrizione>
+        <Quantita>31.00</Quantita>
+        <UnitaMisura>ACCESSI</UnitaMisura>
+
+        <Importo>
+          <Imponibile>29.45</Imponibile>
+        </Importo>
+
+        <Prezzo>
+          <PrezzoCessione>0.95</PrezzoCessione>
+        </Prezzo>
+
+      </Prodotto>
+
+
+      <Prodotto>
+
+        <Progressivo>8</Progressivo>
+        <CodiceProdotto>PRONTOINT</CodiceProdotto>
+        <CodificaProdotto>CODICE_FORNITORE</CodificaProdotto>
+        <Descrizione>Pronto int.: n. 1 passaggio notturno presso Via D. Galli, 3/8</Descrizione>
+        <Quantita>31.00</Quantita>
+        <UnitaMisura>ACCESSI</UnitaMisura>
+
+        <Importo>
+          <Imponibile>29.45</Imponibile>
+        </Importo>
+
+        <Prezzo>
+          <PrezzoCessione>0.95</PrezzoCessione>
+        </Prezzo>
+
+      </Prodotto>
+    </Dettaglio>
+
+
+    <!-- Extracted from PDF page footer. Check sum of terms for total. -->
+    <Importo>
+      <ImponibileTotale>19265.51</ImponibileTotale>
+      <ImportoTotaleTassa>4045.76</ImportoTotaleTassa>
+      <ImportoTotale>23311.27</ImportoTotale>
+      <ImportoTotaleEuro>23311.27</ImportoTotaleEuro>
+    </Importo>
+
+    <!-- Extracted from PDF page footer. Check percentage calculation. -->
+    <Tassa>
+      <PercentualeIVA>21</PercentualeIVA>
+      <Imponibile>19265.51</Imponibile>
+      <ImportoTassa>4045.76</ImportoTassa>
+    </Tassa>
+
+  </Documento>
+
+</Messaggio>
