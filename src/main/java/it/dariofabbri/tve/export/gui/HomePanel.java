@@ -22,8 +22,16 @@ public class HomePanel extends JPanel {
 		JLabel labelHeader = ControlFactory.makeHeaderLabel("Menù principale");
 		this.add(labelHeader);
 		
-		JButton buttonImportazione = ControlFactory.makeFormButton("Importazione");
-		this.add(buttonImportazione);
+		JButton buttonElaborazione = ControlFactory.makeFormButton("Elaborazione");
+		buttonElaborazione.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				TheApplication frame = (TheApplication)SwingUtilities.getWindowAncestor(HomePanel.this);
+				frame.setMainPanel(new PdfChoicePanel());
+			}
+		});
+		this.add(buttonElaborazione);
 		
 		JButton buttonConfigurazione = ControlFactory.makeFormButton("Configurazione");
 		buttonConfigurazione.addActionListener(new ActionListener() {
