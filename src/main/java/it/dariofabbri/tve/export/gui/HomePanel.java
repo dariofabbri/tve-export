@@ -28,7 +28,7 @@ public class HomePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				TheApplication frame = (TheApplication)SwingUtilities.getWindowAncestor(HomePanel.this);
-				frame.setMainPanel(new PdfChoicePanel());
+				frame.setMainPanel(new ElaborationPanel());
 			}
 		});
 		this.add(buttonElaborazione);
