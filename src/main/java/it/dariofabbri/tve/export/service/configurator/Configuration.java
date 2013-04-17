@@ -11,6 +11,9 @@ public class Configuration implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	private Fornitore fornitore;
+	private String username;
+
 	public Configuration() {
 		
 		fornitore = new Fornitore();
@@ -51,15 +54,18 @@ public class Configuration implements Serializable {
 		// Check required dati fiscali fields.
 		//
 		if(StringUtils.isBlank(fornitore.getDatiFiscali().getPartitaIva())) {
-			
+			return false;
+		}
+		
+		
+		// Check username field.
+		//
+		if(StringUtils.isBlank(username)) {
 			return false;
 		}
 		
 		return true;
 	}
-	
-	
-	private Fornitore fornitore;
 
 	public Fornitore getFornitore() {
 		return fornitore;
@@ -68,4 +74,13 @@ public class Configuration implements Serializable {
 	public void setFornitore(Fornitore fornitore) {
 		this.fornitore = fornitore;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
 }

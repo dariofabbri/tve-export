@@ -25,6 +25,7 @@ public class ConfigurationPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
+	private JTextField username;
 	private JTextField descrizione;
 	private JTextField descrizione2;
 	private JTextField indirizzo;
@@ -126,6 +127,13 @@ public class ConfigurationPanel extends JPanel {
 		
 		numeroRegistroImprese = ControlFactory.makeTextField();
 		centerPanel.add(numeroRegistroImprese, ControlFactory.makeFormInputConstraint(10));
+
+		centerPanel.add(
+				ControlFactory.makeFormLabel("Username portale:"),
+				ControlFactory.makeFormLabelConstraint(11));
+		
+		username = ControlFactory.makeTextField();
+		centerPanel.add(username, ControlFactory.makeFormInputConstraint(11));
 		
 		
 		JPanel buttonPanel = new JPanel();
@@ -194,6 +202,8 @@ public class ConfigurationPanel extends JPanel {
 		partitaIva.setText(datiFiscali.getPartitaIva());
 		capitaleSociale.setText(datiFiscali.getCapitaleSociale());
 		numeroRegistroImprese.setText(datiFiscali.getNumeroRegistroImprese());
+		
+		username.setText(configuration.getUsername());
 	}
 	
 	
@@ -215,6 +225,8 @@ public class ConfigurationPanel extends JPanel {
 		datiFiscali.setPartitaIva(StringUtils.trimToNull(partitaIva.getText().trim()));
 		datiFiscali.setCapitaleSociale(StringUtils.trimToNull(capitaleSociale.getText().trim()));
 		datiFiscali.setNumeroRegistroImprese(StringUtils.trimToNull(numeroRegistroImprese.getText().trim()));
+		
+		configuration.setUsername(StringUtils.trimToNull(username.getText().trim()));
 		
 		if(!configuration.isValid()) {
 			

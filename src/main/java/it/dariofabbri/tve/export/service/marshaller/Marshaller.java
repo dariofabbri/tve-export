@@ -8,11 +8,15 @@ import it.dariofabbri.tve.export.model.RiferimentoDocumento;
 import it.dariofabbri.tve.export.service.configurator.Configuration;
 import it.dariofabbri.tve.export.service.configurator.Configurator;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.bind.JAXBContext;
 
@@ -22,10 +26,69 @@ public class Marshaller {
 	private SimpleDateFormat sdf;
 	private Configurator configurator;
 	
+	private Configuration configuration = null;
+	
 	public Marshaller() {
 		
 		sdf = new SimpleDateFormat("yyyy-MM-dd"); 
 		configurator = new Configurator();
+		
+		
+		// Retrieve configuration.
+		//
+		configuration = configurator.load();
+		if(configuration == null) {
+			throw new RuntimeException("Unable to load configuration.");
+		}
+		if(!configuration.isValid()) {
+			throw new RuntimeException("Loaded configuration is not valid.");
+		}
+	}
+	
+	
+	public void generateXml(List<Documento> documenti, Date creationDate, File targetFolder) {
+
+		// Open output stream.
+		//
+		String xmlFilename = String.format("INV_%1s_%2$tY%2$tm%2$td.xml", configuration.getUsername(), creationDate);
+		File xmlFile = new File(targetFolder, xmlFilename);
+		
+		// Generate XML representation.
+		//
+		try {
+		    FileOutputStream fos = new FileOutputStream(xmlFile);
+		    generateXml(documenti, creationDate, fos);
+		    fos.flush();
+		    fos.close();
+		    
+		} catch(Exception e) {
+			
+			throw new RuntimeException("Exception caught while using JAXB to marshal messaggio object.", e);
+		}
+	}
+	
+	
+	public void generateZip(List<Documento> documenti, Date creationDate, File targetFolder) {
+
+		// Open output stream.
+		//
+		String xmlFilename = String.format("INV_%1s_%2$tY%2$tm%2$td.xml", configuration.getUsername(), creationDate);
+		String zipFilename = String.format("INV_%1s_%2$tY%2$tm%2$td.zip", configuration.getUsername(), creationDate);
+		File zipFile = new File(targetFolder, zipFilename);
+		
+		// Generate XML representation.
+		//
+		try {
+			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipFile));
+			zos.putNextEntry(new ZipEntry(xmlFilename));
+		    generateXml(documenti, creationDate, zos);
+		    zos.flush();
+		    zos.close();
+		    
+		} catch(Exception e) {
+			
+			throw new RuntimeException("Exception caught while using JAXB to marshal messaggio object.", e);
+		}
 	}
 	
 	
@@ -34,14 +97,14 @@ public class Marshaller {
 		// Create messaggio object to be marshalled.
 		//		
 		Messaggio messaggio = createMessaggio(documenti, creationDate);
-
+		
 		// Generate XML representation.
 		//
 		try {
 		    JAXBContext jaxbContext = JAXBContext.newInstance(messaggio.getClass());
 		    javax.xml.bind.Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		    jaxbMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		    
+
 		    jaxbMarshaller.marshal(messaggio, os);
 		    
 		} catch(Exception e) {
@@ -73,16 +136,6 @@ public class Marshaller {
 	
 	
 	private List<Documento> injectConfiguration(List<Documento> documenti) {
-		
-		// Retrieve configuration.
-		//
-		Configuration configuration = configurator.load();
-		if(configuration == null) {
-			throw new RuntimeException("Unable to load configuration.");
-		}
-		if(!configuration.isValid()) {
-			throw new RuntimeException("Loaded configuration is not valid.");
-		}
 		
 		Fornitore fornitore = configuration.getFornitore();
 
