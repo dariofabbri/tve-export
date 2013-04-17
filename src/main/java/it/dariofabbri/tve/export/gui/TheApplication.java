@@ -45,7 +45,6 @@ public class TheApplication extends JFrame {
 			e.printStackTrace();
 			return false;
 		}
-		
 	}
 	
 	

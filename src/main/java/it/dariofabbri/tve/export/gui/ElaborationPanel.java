@@ -1,14 +1,18 @@
 package it.dariofabbri.tve.export.gui;
 
+import it.dariofabbri.tve.export.model.Documento;
 import it.dariofabbri.tve.export.service.analyzer.AnalysisResult;
 import it.dariofabbri.tve.export.service.analyzer.Analyzer;
+import it.dariofabbri.tve.export.service.marshaller.Marshaller;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,7 +46,10 @@ public class ElaborationPanel extends JPanel {
 		table = new JTable(new InvoicesTableModel());
         table.setPreferredScrollableViewportSize(new Dimension(800, 300));
         table.setFillsViewportHeight(true);
+        table.setRowSelectionAllowed(false);
 		JScrollPane scrollPane = new JScrollPane(table);
+		
+		
         this.add(scrollPane, BorderLayout.CENTER);
 		
 		JPanel buttonPanel = new JPanel();
@@ -73,10 +80,28 @@ public class ElaborationPanel extends JPanel {
 			}
 		});
 		buttonPanel.add(loadButton);
+		
+		JButton exportButton = ControlFactory.makeFormButton("Esporta XML");
+		exportButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				JFileChooser fileChooser = new JFileChooser();
+				if(fileChooser.showOpenDialog(ElaborationPanel.this) == JFileChooser.APPROVE_OPTION) {
+					loadInvoices(fileChooser.getSelectedFile());
+				}
+			}
+		});
+		buttonPanel.add(exportButton);
 	}
 
 
 	private void loadInvoices(File file) {
+		
+		// Set wait cursor.
+		//
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		
 		// Check if the selected file exists.
 		//
@@ -86,6 +111,8 @@ public class ElaborationPanel extends JPanel {
 			    "Il file selezionato non esiste.",
 			    "Errore",
 			    JOptionPane.ERROR_MESSAGE);
+			this.setCursor(Cursor.getDefaultCursor());
+			return;
 		}
 		
 		// Check if the selected file is really a file.
@@ -96,6 +123,8 @@ public class ElaborationPanel extends JPanel {
 				    "E'obbligatorio selezionare un file.",
 				    "Errore",
 				    JOptionPane.ERROR_MESSAGE);
+			this.setCursor(Cursor.getDefaultCursor());
+			return;
 		}
 		
 		// Check if the selected file ends with PDF extension.
@@ -106,6 +135,8 @@ public class ElaborationPanel extends JPanel {
 				    "E' obbligatorio selezionare un file di tipo PDF.",
 				    "Errore",
 				    JOptionPane.ERROR_MESSAGE);			
+			this.setCursor(Cursor.getDefaultCursor());
+			return;
 		}
 		
 		// Open the PDF document.
@@ -121,6 +152,8 @@ public class ElaborationPanel extends JPanel {
 				    "Si è verificato un errore in fase di caricamento del PDF selezionato.",
 				    "Errore",
 				    JOptionPane.ERROR_MESSAGE);			
+			this.setCursor(Cursor.getDefaultCursor());
+			return;
 		}
 
 		// Analyze the PDF document.
@@ -133,6 +166,8 @@ public class ElaborationPanel extends JPanel {
 				    "Si è verificato un errore in fase di estrazione delle fatture dal PDF selezionato.",
 				    "Errore",
 				    JOptionPane.ERROR_MESSAGE);						
+			this.setCursor(Cursor.getDefaultCursor());
+			return;
 		}
 		
 		// If some non blocking errors have been detected in the PDF file,
@@ -148,10 +183,12 @@ public class ElaborationPanel extends JPanel {
 				    "Attenzione",
 				    JOptionPane.WARNING_MESSAGE);						
 		}
-		
+
+		// Set read documents in the table data model.
+		//
 		InvoicesTableModel model = (InvoicesTableModel)table.getModel();
 		model.setData(result.getDocumenti());
-		table.setModel(model);
+		this.setCursor(Cursor.getDefaultCursor());
 	}
 
 
@@ -170,5 +207,59 @@ public class ElaborationPanel extends JPanel {
 		}
 		
 		return sb.toString();
+	}
+	
+	
+	private void exportSelectedInvoices(File file) {
+
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+		// Get list of selected documents.
+		//
+		InvoicesTableModel model = (InvoicesTableModel)table.getModel();
+		List<Documento> documenti = model.getSelectedDocuments();
+
+		// At least on document must have been selected.
+		//
+		if(documenti == null || documenti.size() == 0) {
+			JOptionPane.showMessageDialog(
+					null,
+				    "E' necessario selezionare almeno una fattura.",
+				    "Errore",
+				    JOptionPane.ERROR_MESSAGE);						
+			this.setCursor(Cursor.getDefaultCursor());
+			return;
+		}
+		
+		// Get selected creation date.
+		//
+		
+		try {
+			// Open file output stream.
+			//
+			FileOutputStream fos = new FileOutputStream(file);
+			
+			Marshaller marshaller = new Marshaller();
+			//marshaller.generateXml(documenti, creationDate, fos);
+			
+			// Close stream.
+			//
+			fos.flush();
+			fos.close();
+			
+		} catch(Exception e) {
+			
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(
+					null,
+				    "Si è verificato un errore in fase di generazione del file XML.",
+				    "Errore",
+				    JOptionPane.ERROR_MESSAGE);
+			
+			this.setCursor(Cursor.getDefaultCursor());
+			return;
+		}
+
+		this.setCursor(Cursor.getDefaultCursor());
 	}
 }
