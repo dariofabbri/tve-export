@@ -1,6 +1,7 @@
 package it.dariofabbri.tve.export.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -33,6 +34,9 @@ public class ControlFactory {
 	public static JTextField makeTextField() {
 		
 		JTextField field = new JTextField();
+		Dimension d = field.getPreferredSize();
+		d.width = 300;
+		field.setPreferredSize(d);
 		return field;
 	}
 	
