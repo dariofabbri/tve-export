@@ -55,5 +55,4 @@ public class HomePanel extends JPanel {
 		});
 		this.add(buttonUscita);
 	}
-	
 }

@@ -26,9 +26,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -42,6 +45,7 @@ public class ElaborationPanel extends JPanel {
 	private JTable table;
 	private JTextField creationDate;
 	private JButton exportButton;
+	private JButton modifyButton;
 
 	
 	public ElaborationPanel() {
@@ -55,7 +59,18 @@ public class ElaborationPanel extends JPanel {
 		table = new JTable(new InvoicesTableModel());
         table.setPreferredScrollableViewportSize(new Dimension(800, 300));
         table.setFillsViewportHeight(true);
-        table.setRowSelectionAllowed(false);
+        table.setRowSelectionAllowed(true);
+        table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(e.getValueIsAdjusting()) {
+					return;
+				}
+				modifyButton.setEnabled(table.getSelectedRow() >= 0);
+			}
+		});
 		JScrollPane scrollPane = new JScrollPane(table);
 		
 		JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -118,6 +133,16 @@ public class ElaborationPanel extends JPanel {
 			}
 		});
 		buttonPanel.add(loadButton);
+		
+		modifyButton = ControlFactory.makeFormButton("Modifica fattura");
+		modifyButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		modifyButton.setEnabled(false);
+		buttonPanel.add(modifyButton);
 		
 		exportButton = ControlFactory.makeFormButton("Esporta XML");
 		exportButton.addActionListener(new ActionListener() {
