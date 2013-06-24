@@ -56,7 +56,7 @@ public class ElaborationPanel extends JPanel {
 		JLabel labelHeader = ControlFactory.makeHeaderLabel("Elaborazione PDF");
 		this.add(labelHeader, BorderLayout.NORTH);		
 		
-		table = new JTable(new InvoicesTableModel());
+		table = new JTable(InvoicesTableModel.getInstance());
         table.setPreferredScrollableViewportSize(new Dimension(800, 300));
         table.setFillsViewportHeight(true);
         table.setRowSelectionAllowed(true);
@@ -139,6 +139,12 @@ public class ElaborationPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				int index = table.getSelectedRow();
+				InvoicesTableModel model = InvoicesTableModel.getInstance();
+				
+				TheApplication frame = (TheApplication)SwingUtilities.getWindowAncestor(ElaborationPanel.this);
+				frame.setMainPanel(new InvoiceDetailPanel(model.getDocumenti().get(index)));				
 			}
 		});
 		modifyButton.setEnabled(false);
@@ -253,7 +259,7 @@ public class ElaborationPanel extends JPanel {
 		// Set read documents in the table data model.
 		//
 		InvoicesTableModel model = (InvoicesTableModel)table.getModel();
-		model.setData(result.getDocumenti());
+		model.setDocumenti(result.getDocumenti());
 		this.setCursor(Cursor.getDefaultCursor());
 	}
 

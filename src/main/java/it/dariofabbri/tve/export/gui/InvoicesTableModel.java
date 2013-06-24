@@ -13,13 +13,24 @@ public class InvoicesTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
 
+	private static InvoicesTableModel instance = null;
+	
 	private List<Documento> documenti;
 	private Object[][] data;
 	private String[] columns = {"", "Numero fattura", "Data fattura", "Importo fattura", "Righe di dettaglio"};
 	
-	public InvoicesTableModel() {
+	private InvoicesTableModel() {
 		
 		data = new Object[0][columns.length];
+	}
+	
+	public static InvoicesTableModel getInstance() {
+		
+		if(instance == null) {
+			instance = new InvoicesTableModel();
+		}
+		
+		return instance;
 	}
 	
 	@Override
@@ -64,11 +75,23 @@ public class InvoicesTableModel extends AbstractTableModel {
 		return getValueAt(0, columnIndex).getClass();	
 	}
 	
-	public void setData(List<Documento> documenti) {
+	public void setDocumenti(List<Documento> documenti) {
 	
 		// Save the original list for later use.
 		//
 		this.documenti = documenti;
+		
+		// Update data model.
+		//
+		updateModel();
+	}
+	
+	public List<Documento> getDocumenti() {
+		return documenti;
+	}
+
+	
+	public void updateModel() {
 		
 		// Allocate space.
 		//
