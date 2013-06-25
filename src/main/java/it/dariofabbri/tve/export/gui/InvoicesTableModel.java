@@ -93,6 +93,11 @@ public class InvoicesTableModel extends AbstractTableModel {
 	
 	public void updateModel() {
 		
+		if(documenti == null) {
+			return;
+			
+		}
+		
 		// Allocate space.
 		//
 		data = new Object[documenti.size()][columns.length];

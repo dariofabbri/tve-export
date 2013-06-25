@@ -56,7 +56,10 @@ public class ElaborationPanel extends JPanel {
 		JLabel labelHeader = ControlFactory.makeHeaderLabel("Elaborazione PDF");
 		this.add(labelHeader, BorderLayout.NORTH);		
 		
-		table = new JTable(InvoicesTableModel.getInstance());
+		InvoicesTableModel model = InvoicesTableModel.getInstance();
+		model.updateModel();
+		
+		table = new JTable(model);
         table.setPreferredScrollableViewportSize(new Dimension(800, 300));
         table.setFillsViewportHeight(true);
         table.setRowSelectionAllowed(true);

@@ -17,6 +17,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 public class InvoiceDetailPanel extends JPanel {
 
@@ -25,6 +27,7 @@ public class InvoiceDetailPanel extends JPanel {
 	private JTable table;
 	private JTextField total;
 	private JTextField taxTotal;
+	private JTextField grandTotal;
 
 	private InvoiceDetailTableModel model;
 	
@@ -39,6 +42,13 @@ public class InvoiceDetailPanel extends JPanel {
 		
 		model = new InvoiceDetailTableModel();
 		model.setDocumento(documento);
+		model.addTableModelListener(new TableModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				updateTotals();
+			}
+		});
 		
 		table = new JTable(model);
         table.setPreferredScrollableViewportSize(new Dimension(800, 300));
@@ -47,18 +57,28 @@ public class InvoiceDetailPanel extends JPanel {
 		JScrollPane scrollPane = new JScrollPane(table);
 		
 		JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
 		JLabel labelTotal = ControlFactory.makeFormLabel("Imponibile totale:");
 		totalPanel.add(labelTotal);
 		total = ControlFactory.makeTextField();
 		total.setColumns(10);
 		total.setEditable(false);
 		totalPanel.add(total);
+		
 		JLabel labelTaxTotal = ControlFactory.makeFormLabel("Totale tasse:");
 		totalPanel.add(labelTaxTotal);
 		taxTotal = ControlFactory.makeTextField();
 		taxTotal.setColumns(10);
 		taxTotal.setEditable(false);
 		totalPanel.add(taxTotal);
+		
+		JLabel labelGrandTotal = ControlFactory.makeFormLabel("Importo totale:");
+		totalPanel.add(labelGrandTotal);
+		grandTotal = ControlFactory.makeTextField();
+		grandTotal.setColumns(10);
+		grandTotal.setEditable(false);
+		totalPanel.add(grandTotal);
+		
 		updateTotals();
 		
 		JPanel centerPanel = new JPanel();
@@ -88,6 +108,9 @@ public class InvoiceDetailPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				model.saveChanges();
+				
 				TheApplication frame = (TheApplication)SwingUtilities.getWindowAncestor(InvoiceDetailPanel.this);
 				frame.setMainPanel(new ElaborationPanel());				
 			}
@@ -98,5 +121,8 @@ public class InvoiceDetailPanel extends JPanel {
 
 	private void updateTotals() {
 		
+		total.setText(model.getImponibileTotale());
+		taxTotal.setText(model.getImportoTotaleTassa());
+		grandTotal.setText(model.getImportoTotale());
 	}
 }
