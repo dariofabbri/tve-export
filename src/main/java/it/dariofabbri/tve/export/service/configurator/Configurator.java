@@ -8,7 +8,7 @@ import java.io.ObjectOutputStream;
 
 public class Configurator {
 
-	private static final String filename = "config.bin";
+	private static final String filename = System.getProperty("java.io.tmpdir") + "/config.bin";
 
 	public Configuration load() {
 		

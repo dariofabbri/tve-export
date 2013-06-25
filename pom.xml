@@ -80,6 +80,25 @@
 					<jnlp>
 						<mainClass>it.dariofabbri.tve.export.gui.TheApplication</mainClass>
 					</jnlp>
+					<sign>
+						<keystore>/tmp/myappkeystore</keystore>
+						<keypass>mmm</keypass>
+						<storepass>mmm</storepass>
+						<alias>foobar</alias>
+						<validity></validity>
+		
+						<dnameCn>Dario Fabbri</dnameCn>
+						<dnameOu>Software Development</dnameOu>
+						<dnameO>Dario Fabbri</dnameO>
+						<dnameL>Roma</dnameL>
+						<dnameSt>Italy</dnameSt>
+						<dnameC>IT</dnameC>
+						<verify>false</verify>
+						<keystoreConfig>
+							<delete>true</delete>
+							<gen>true</gen>
+						</keystoreConfig>
+					</sign>
 				</configuration>
 			</plugin>
 		</plugins>
