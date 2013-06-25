@@ -72,6 +72,16 @@
 					</archive>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>webstart-maven-plugin</artifactId>
+				<version>1.0-beta-3</version>
+				<configuration>
+					<jnlp>
+						<mainClass>it.dariofabbri.tve.export.gui.TheApplication</mainClass>
+					</jnlp>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
