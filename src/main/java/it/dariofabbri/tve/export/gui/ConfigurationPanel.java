@@ -25,7 +25,6 @@ public class ConfigurationPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private JTextField username;
 	private JTextField descrizione;
 	private JTextField descrizione2;
 	private JTextField indirizzo;
@@ -37,6 +36,8 @@ public class ConfigurationPanel extends JPanel {
 	private JTextField partitaIva;
 	private JTextField capitaleSociale;
 	private JTextField numeroRegistroImprese;
+	private JTextField usernameProduzione;
+	private JTextField usernameTest;
 	
 
 	public ConfigurationPanel() {
@@ -129,11 +130,18 @@ public class ConfigurationPanel extends JPanel {
 		centerPanel.add(numeroRegistroImprese, ControlFactory.makeFormInputConstraint(10));
 
 		centerPanel.add(
-				ControlFactory.makeFormLabel("Username portale:"),
+				ControlFactory.makeFormLabel("Username portale (prod.):"),
 				ControlFactory.makeFormLabelConstraint(11));
 		
-		username = ControlFactory.makeTextField();
-		centerPanel.add(username, ControlFactory.makeFormInputConstraint(11));
+		usernameProduzione = ControlFactory.makeTextField();
+		centerPanel.add(usernameProduzione, ControlFactory.makeFormInputConstraint(11));
+
+		centerPanel.add(
+				ControlFactory.makeFormLabel("Username portale (test):"),
+				ControlFactory.makeFormLabelConstraint(12));
+		
+		usernameTest = ControlFactory.makeTextField();
+		centerPanel.add(usernameTest, ControlFactory.makeFormInputConstraint(12));
 		
 		
 		JPanel buttonPanel = new JPanel();
@@ -203,7 +211,8 @@ public class ConfigurationPanel extends JPanel {
 		capitaleSociale.setText(datiFiscali.getCapitaleSociale());
 		numeroRegistroImprese.setText(datiFiscali.getNumeroRegistroImprese());
 		
-		username.setText(configuration.getUsername());
+		usernameProduzione.setText(configuration.getUsernameProduzione());
+		usernameTest.setText(configuration.getUsernameTest());
 	}
 	
 	
@@ -226,7 +235,8 @@ public class ConfigurationPanel extends JPanel {
 		datiFiscali.setCapitaleSociale(StringUtils.trimToNull(capitaleSociale.getText().trim()));
 		datiFiscali.setNumeroRegistroImprese(StringUtils.trimToNull(numeroRegistroImprese.getText().trim()));
 		
-		configuration.setUsername(StringUtils.trimToNull(username.getText().trim()));
+		configuration.setUsernameProduzione(StringUtils.trimToNull(usernameProduzione.getText().trim()));
+		configuration.setUsernameTest(StringUtils.trimToNull(usernameTest.getText().trim()));
 		
 		if(!configuration.isValid()) {
 			

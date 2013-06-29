@@ -113,7 +113,7 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 		BigDecimal quantity = DecimalUtils.makeBigDecimalFromString((String)data[rowIndex][1]);
 		BigDecimal price = DecimalUtils.makeBigDecimalFromString((String)data[rowIndex][3]);
 		BigDecimal total = price.multiply(quantity);
-		data[rowIndex][4] = DecimalUtils.makeString(total, 2);
+		data[rowIndex][4] = DecimalUtils.makeString(total);
 		
 		// Fire update event.
 		//
@@ -232,9 +232,9 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 		
 		// Format strings.
 		//
-		imponibileTotale = DecimalUtils.makeString(total, 2);
-		importoTotaleTassa = DecimalUtils.makeString(taxTotal, 2);
-		importoTotale = DecimalUtils.makeString(grandTotal, 2);
+		imponibileTotale = DecimalUtils.makeString(total);
+		importoTotaleTassa = DecimalUtils.makeString(taxTotal);
+		importoTotale = DecimalUtils.makeString(grandTotal);
 		
 		fireTableDataChanged();
 	}

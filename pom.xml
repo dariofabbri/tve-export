@@ -85,7 +85,6 @@
 						<keypass>dariofabbri</keypass>
 						<storepass>dariofabbri</storepass>
 						<alias>dariofabbri</alias>
-						<validity></validity>
 
 						<verify>true</verify>
 					</sign>

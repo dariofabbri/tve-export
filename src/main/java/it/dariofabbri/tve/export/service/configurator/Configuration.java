@@ -12,7 +12,8 @@ public class Configuration implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Fornitore fornitore;
-	private String username;
+	private String usernameProduzione;
+	private String usernameTest;
 
 	public Configuration() {
 		
@@ -58,9 +59,12 @@ public class Configuration implements Serializable {
 		}
 		
 		
-		// Check username field.
+		// Check username fields.
 		//
-		if(StringUtils.isBlank(username)) {
+		if(StringUtils.isBlank(usernameProduzione)) {
+			return false;
+		}
+		if(StringUtils.isBlank(usernameTest)) {
 			return false;
 		}
 		
@@ -75,12 +79,19 @@ public class Configuration implements Serializable {
 		this.fornitore = fornitore;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUsernameProduzione() {
+		return usernameProduzione;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsernameProduzione(String usernameProduzione) {
+		this.usernameProduzione = usernameProduzione;
 	}
-	
+
+	public String getUsernameTest() {
+		return usernameTest;
+	}
+
+	public void setUsernameTest(String usernameTest) {
+		this.usernameTest = usernameTest;
+	}
 }

@@ -13,7 +13,7 @@ public class DecimalUtils {
 		dfs.setDecimalSeparator('.');
 		dfs.setGroupingSeparator(',');
 		
-		df = new DecimalFormat("###.##");
+		df = new DecimalFormat("###.00");
 		df.setDecimalFormatSymbols(dfs);
 		df.setGroupingUsed(false);
 	}
@@ -24,7 +24,7 @@ public class DecimalUtils {
 		return bd;
 	}
 
-	public static String makeString(BigDecimal bd, int decimalDigits) {
+	public static String makeString(BigDecimal bd) {
 		
 		return df.format(bd);
 	}

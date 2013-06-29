@@ -44,7 +44,8 @@ public class ElaborationPanel extends JPanel {
 
 	private JTable table;
 	private JTextField creationDate;
-	private JButton exportButton;
+	private JButton exportProduzioneButton;
+	private JButton exportTestButton;
 	private JButton modifyButton;
 
 	
@@ -100,7 +101,8 @@ public class ElaborationPanel extends JPanel {
 			}
 			
 			private void checkAndEnable() {
-				exportButton.setEnabled(!StringUtils.isEmpty(creationDate.getText()));
+				exportProduzioneButton.setEnabled(!StringUtils.isEmpty(creationDate.getText()));
+				exportTestButton.setEnabled(!StringUtils.isEmpty(creationDate.getText()));
 			}
 		});
 		datePanel.add(creationDate);
@@ -153,15 +155,25 @@ public class ElaborationPanel extends JPanel {
 		modifyButton.setEnabled(false);
 		buttonPanel.add(modifyButton);
 		
-		exportButton = ControlFactory.makeFormButton("Esporta XML");
-		exportButton.addActionListener(new ActionListener() {
+		exportProduzioneButton = ControlFactory.makeFormButton("Esporta XML (prod.)");
+		exportProduzioneButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				exportSelectedInvoices();
+				exportSelectedInvoices(true);
 			}
 		});
-		buttonPanel.add(exportButton);
+		buttonPanel.add(exportProduzioneButton);
+		
+		exportTestButton = ControlFactory.makeFormButton("Esporta XML (test)");
+		exportTestButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				exportSelectedInvoices(false);
+			}
+		});
+		buttonPanel.add(exportTestButton);
 	}
 
 
@@ -285,7 +297,7 @@ public class ElaborationPanel extends JPanel {
 	}
 	
 	
-	private void exportSelectedInvoices() {
+	private void exportSelectedInvoices(boolean produzione) {
 
 		// Get creation date.
 		//
@@ -345,8 +357,8 @@ public class ElaborationPanel extends JPanel {
 			// Marshal documents to XML.
 			//
 			Marshaller marshaller = new Marshaller();
-			marshaller.generateXml(documenti, date, file);
-			marshaller.generateZip(documenti, date, file);
+			marshaller.generateXml(documenti, date, file, produzione);
+			marshaller.generateZip(documenti, date, file, produzione);
 			
 		} catch(Exception e) {
 			

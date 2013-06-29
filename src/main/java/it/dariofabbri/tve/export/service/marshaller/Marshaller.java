@@ -46,11 +46,14 @@ public class Marshaller {
 	}
 	
 	
-	public void generateXml(List<Documento> documenti, Date creationDate, File targetFolder) {
+	public void generateXml(List<Documento> documenti, Date creationDate, File targetFolder, boolean produzione) {
 
 		// Open output stream.
 		//
-		String xmlFilename = String.format("INV_%1s_%2$tY%2$tm%2$td.xml", configuration.getUsername(), creationDate);
+		String xmlFilename = 
+				String.format("INV_%1s_%2$tY%2$tm%2$td.xml", 
+						produzione ? configuration.getUsernameProduzione() : configuration.getUsernameTest(), 
+						creationDate);
 		File xmlFile = new File(targetFolder, xmlFilename);
 		
 		// Generate XML representation.
@@ -68,12 +71,18 @@ public class Marshaller {
 	}
 	
 	
-	public void generateZip(List<Documento> documenti, Date creationDate, File targetFolder) {
+	public void generateZip(List<Documento> documenti, Date creationDate, File targetFolder, boolean produzione) {
 
 		// Open output stream.
 		//
-		String xmlFilename = String.format("INV_%1s_%2$tY%2$tm%2$td.xml", configuration.getUsername(), creationDate);
-		String zipFilename = String.format("INV_%1s_%2$tY%2$tm%2$td.zip", configuration.getUsername(), creationDate);
+		String xmlFilename = 
+				String.format("INV_%1s_%2$tY%2$tm%2$td.xml", 
+						produzione ? configuration.getUsernameProduzione() : configuration.getUsernameTest(), 
+						creationDate);
+		String zipFilename = 
+				String.format("INV_%1s_%2$tY%2$tm%2$td.zip", 
+						produzione ? configuration.getUsernameProduzione() : configuration.getUsernameTest(), 
+						creationDate);
 		File zipFile = new File(targetFolder, zipFilename);
 		
 		// Generate XML representation.
