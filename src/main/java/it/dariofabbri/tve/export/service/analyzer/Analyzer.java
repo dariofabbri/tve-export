@@ -528,7 +528,7 @@ public class Analyzer {
 	}
 	
 	
-	private String extractCodiceProdotto(String s) {
+	public static String extractCodiceProdotto(String s) {
 
 		Pattern pattern = Pattern.compile(".*-\\s+([^:]+):.*");
 		Matcher matcher = pattern.matcher(s);
@@ -541,7 +541,7 @@ public class Analyzer {
 	}
 	
 	
-	private String extractDescrizioneProdotto(String s) {
+	public static String extractDescrizioneProdotto(String s) {
 
 		Pattern pattern = Pattern.compile("\\s*-\\s+(.*)");
 		Matcher matcher = pattern.matcher(s);
@@ -554,7 +554,7 @@ public class Analyzer {
 	}
 	
 	
-	private String extractQuantitaProdotto(String s, String codiceProdotto) {
+	public static String extractQuantitaProdotto(String s, String codiceProdotto) {
 
 		if(codiceProdotto.equals("PIANTON")) {
 			
@@ -588,7 +588,7 @@ public class Analyzer {
 	}
 	
 	
-	private String extractUnitaMisuraProdotto(String codiceProdotto) {
+	public static String extractUnitaMisuraProdotto(String codiceProdotto) {
 
 		if(codiceProdotto.equals("PIANTON")) {
 			
@@ -605,13 +605,13 @@ public class Analyzer {
 	}
 	
 	
-	private String extractImponibileProdotto(String s) {
+	public static String extractImponibileProdotto(String s) {
 
 		return s.trim().replaceAll("[^0-9,]", "").replaceAll(",", ".");
 	}
 	
 	
-	private String extractPrezzoCessioneProdotto(String s) {
+	public static String extractPrezzoCessioneProdotto(String s) {
 
 		return s.trim().replaceAll("[^0-9,]", "").replaceAll(",", ".");
 	}

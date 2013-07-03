@@ -16,7 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -28,6 +31,8 @@ public class InvoiceDetailPanel extends JPanel {
 	private JTextField total;
 	private JTextField taxTotal;
 	private JTextField grandTotal;
+	
+	private JButton removeButton;
 
 	private InvoiceDetailTableModel model;
 	
@@ -53,8 +58,19 @@ public class InvoiceDetailPanel extends JPanel {
 		table = new JTable(model);
         table.setPreferredScrollableViewportSize(new Dimension(800, 300));
         table.setFillsViewportHeight(true);
-        table.setRowSelectionAllowed(false);
         table.getColumnModel().removeColumn(table.getColumnModel().getColumn(5));
+        table.setRowSelectionAllowed(true);
+        table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(e.getValueIsAdjusting()) {
+					return;
+				}
+				removeButton.setEnabled(table.getSelectedRow() >= 0);
+			}
+		});
 		JScrollPane scrollPane = new JScrollPane(table);
 		
 		JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -103,6 +119,32 @@ public class InvoiceDetailPanel extends JPanel {
 			}
 		});
 		buttonPanel.add(cancelButton);
+		
+		JButton addButton = ControlFactory.makeFormButton("Aggiungi riga");
+		addButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				model.addEmptyRow();
+			}
+		});
+		buttonPanel.add(addButton);
+		
+		removeButton = ControlFactory.makeFormButton("Rimuovi riga");
+		removeButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				int rowIndex = table.getSelectedRow();
+				if(rowIndex >= 0) {
+					model.deleteRow(rowIndex);
+				}
+			}
+		});
+		removeButton.setEnabled(false);
+		buttonPanel.add(removeButton);
 		
 		JButton applyButton = ControlFactory.makeFormButton("Salva modifiche");
 		applyButton.addActionListener(new ActionListener() {

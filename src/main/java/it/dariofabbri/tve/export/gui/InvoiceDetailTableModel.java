@@ -2,8 +2,11 @@ package it.dariofabbri.tve.export.gui;
 
 import it.dariofabbri.tve.export.model.Documento;
 import it.dariofabbri.tve.export.model.Importo;
+import it.dariofabbri.tve.export.model.ImportoProdotto;
+import it.dariofabbri.tve.export.model.Prezzo;
 import it.dariofabbri.tve.export.model.Prodotto;
 import it.dariofabbri.tve.export.model.Tassa;
+import it.dariofabbri.tve.export.service.analyzer.Analyzer;
 import it.dariofabbri.tve.export.util.DecimalUtils;
 import it.dariofabbri.tve.export.util.ValidationUtils;
 
@@ -11,7 +14,10 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class InvoiceDetailTableModel extends AbstractTableModel {
 
@@ -31,6 +37,8 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 	private String imponibileTotale;
 	private String importoTotaleTassa;
 	private String importoTotale;
+	
+	private Set<Integer> deleted = new HashSet<Integer>();
 	
 
 	public String getImponibileTotale() {
@@ -95,15 +103,60 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		
-		// Apply validation. We accept only valid floating point values.
+		// Validate description field.
+		//
+		if(columnIndex == 0) {
+			
+			String s = "- " + (String)aValue;
+			
+			// Try to extract product code.
+			//
+			String codiceProdotto = Analyzer.extractCodiceProdotto((String)s);
+			if(StringUtils.isEmpty(codiceProdotto)) {
+				JOptionPane.showMessageDialog(
+						null, 
+						"Impossibile estrarre il codice prodotto dalla descrizione immessa.", 
+						"Errore", 
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			// Try to extract unit of measurement.
+			//
+			String unitaMisura = Analyzer.extractUnitaMisuraProdotto(codiceProdotto);
+			if(StringUtils.isEmpty(unitaMisura)) {
+				JOptionPane.showMessageDialog(
+						null, 
+						"Impossibile estrarre l'unità di misura dalla descrizione immessa.", 
+						"Errore", 
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			data[rowIndex][2] = unitaMisura;
+		}
+		
+		// Validate quantity field.
 		//
 		if(columnIndex == 1) {
 			if(!ValidationUtils.isValidQuantity((String)aValue)) {
+				JOptionPane.showMessageDialog(
+						null, 
+						"Inserire una quantità valida.", 
+						"Errore", 
+						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 		}
+		
+		// Validate price field.
+		//
 		if(columnIndex == 3) {
 			if(!ValidationUtils.isValidPrice((String)aValue)) {
+				JOptionPane.showMessageDialog(
+						null, 
+						"Inserire un prezzo valido.", 
+						"Errore", 
+						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 		}
@@ -122,6 +175,7 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 		// Fire update event.
 		//
         fireTableCellUpdated(rowIndex, columnIndex);
+        fireTableCellUpdated(rowIndex, 2);
         fireTableCellUpdated(rowIndex, 4);
         
         // Update totals.
@@ -150,22 +204,45 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 	}
 	
 	public void saveChanges() {
-		
-		int size = data.length;
 
 		// Copy relevant fields in source document.
 		//
-		Set<Integer> foundIndexes = new HashSet<Integer>();
-		for(int i = 0; i < size; ++i) {
+		for(int i = 0; i < data.length; ++i) {
 
-			int prdIndex = (int)data[i][5];
-			foundIndexes.add(prdIndex);
+			Integer prdIndex = (Integer)data[i][5];
 			
-			if(prdIndex >= documento.getProdotti().size()) {
-				
-				// Add new one.
+			if(prdIndex == null) {
+
+				// Prepare fields.
 				//
+				String descrizione = (String)data[i][0];
+				String quantita = (String)data[i][1];
+				String prezzoCessione = (String)data[i][3];
+				String imponibile = (String)data[i][4];
 				
+				Prezzo prezzo = new Prezzo();
+				prezzo.setPrezzoCessione(prezzoCessione);
+				
+				ImportoProdotto importo = new ImportoProdotto();
+				importo.setImponibile(imponibile);
+				
+				String codiceProdotto = Analyzer.extractCodiceProdotto("- " + descrizione);
+				String unitaMisura = Analyzer.extractUnitaMisuraProdotto(codiceProdotto);
+				String codificaProdotto = "CODICE_FORNITORE";
+				
+				// Add new product.
+				//
+				Prodotto prodotto = new Prodotto();
+				prodotto.setCodiceProdotto(codiceProdotto);
+				prodotto.setCodificaProdotto(codificaProdotto);
+				prodotto.setDescrizione(descrizione);
+				prodotto.setQuantita(quantita);
+				prodotto.setUnitaMisura(unitaMisura);
+				prodotto.setPrezzo(prezzo);
+				prodotto.setImporto(importo);
+				
+				documento.getProdotti().add(prodotto);
+				prodotto.setProgressivo(documento.getProdotti().indexOf(prodotto));
 			}
 			else {
 				
@@ -179,6 +256,17 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 			}
 		}
 		
+		// Remove deleted rows.
+		//
+		for(Integer idx : deleted) {
+			
+			if(idx == null) {
+				continue;
+			}
+			
+			documento.getProdotti().remove((int)idx);
+		}
+
 		
 		// Set document totals.
 		//
@@ -259,5 +347,55 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 		importoTotale = DecimalUtils.makeString(grandTotal);
 		
 		fireTableDataChanged();
+	}
+	
+	
+	public void addEmptyRow() {
+		
+		Object[][] newData = new Object[data.length + 1][columns.length];
+		
+		for(int i = 0; i < data.length; ++i) {
+			for(int j = 0; j < columns.length; ++j) {
+				newData[i][j] = data[i][j];
+			}
+		}
+		
+		newData[data.length][0] = "";
+		newData[data.length][1] = "0";
+		newData[data.length][2] = "";
+		newData[data.length][3] = "0";
+		newData[data.length][4] = "0";
+		newData[data.length][5] = null;
+
+		data = newData;
+		
+		updateTotals();
+	}
+	
+	
+	public void deleteRow(int rowIndex) {
+		
+		Object[][] newData = new Object[data.length - 1][columns.length];
+		
+		for(int i = 0; i < rowIndex; ++i) {
+			for(int j = 0; j < columns.length; ++j) {
+				newData[i][j] = data[i][j];
+			}
+		}
+		
+		for(int i = rowIndex + 1; i < data.length; ++i) {
+			for(int j = 0; j < columns.length; ++j) {
+				newData[i - 1][j] = data[i][j];
+			}
+		}
+		
+		Integer prdIndex = (Integer)data[rowIndex][5];
+		if(prdIndex != null) {
+			deleted.add(prdIndex);
+		}
+		
+		data = newData;
+		
+		updateTotals();
 	}
 }
