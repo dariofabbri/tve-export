@@ -54,6 +54,7 @@ public class InvoiceDetailPanel extends JPanel {
         table.setPreferredScrollableViewportSize(new Dimension(800, 300));
         table.setFillsViewportHeight(true);
         table.setRowSelectionAllowed(false);
+        table.getColumnModel().removeColumn(table.getColumnModel().getColumn(5));
 		JScrollPane scrollPane = new JScrollPane(table);
 		
 		JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));

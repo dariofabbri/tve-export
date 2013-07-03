@@ -3,10 +3,13 @@ package it.dariofabbri.tve.export.gui;
 import it.dariofabbri.tve.export.model.Documento;
 import it.dariofabbri.tve.export.model.Importo;
 import it.dariofabbri.tve.export.model.Prodotto;
+import it.dariofabbri.tve.export.model.Tassa;
 import it.dariofabbri.tve.export.util.DecimalUtils;
 import it.dariofabbri.tve.export.util.ValidationUtils;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -21,7 +24,8 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 				"Quantità", 
 				"Unità", 
 				"Prezzo unitario", 
-				"Imponibile"
+				"Imponibile",
+				"Id"
 	};
 	
 	private String imponibileTotale;
@@ -85,7 +89,7 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		
-		return columnIndex == 1 || columnIndex == 3;
+		return columnIndex == 0 || columnIndex == 1 || columnIndex == 3;
 	}
 	
 	@Override
@@ -147,20 +151,32 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 	
 	public void saveChanges() {
 		
-		int size = 0;
-		if(documento.getProdotti() != null) {
-			size = documento.getProdotti().size();
-		}
+		int size = data.length;
 
 		// Copy relevant fields in source document.
 		//
+		Set<Integer> foundIndexes = new HashSet<Integer>();
 		for(int i = 0; i < size; ++i) {
+
+			int prdIndex = (int)data[i][5];
+			foundIndexes.add(prdIndex);
 			
-			Prodotto prodotto = documento.getProdotti().get(i);
-			
-			prodotto.setQuantita((String)data[i][1]);
-			prodotto.getPrezzo().setPrezzoCessione((String)data[i][3]);
-			prodotto.getImporto().setImponibile((String)data[i][4]);
+			if(prdIndex >= documento.getProdotti().size()) {
+				
+				// Add new one.
+				//
+				
+			}
+			else {
+				
+				// Update existing one.
+				//
+				Prodotto prodotto = documento.getProdotti().get(prdIndex);
+				prodotto.setDescrizione((String)data[i][0]);
+				prodotto.setQuantita((String)data[i][1]);
+				prodotto.getPrezzo().setPrezzoCessione((String)data[i][3]);
+				prodotto.getImporto().setImponibile((String)data[i][4]);
+			}
 		}
 		
 		
@@ -171,6 +187,10 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 		importo.setImportoTotaleTassa(importoTotaleTassa);
 		importo.setImportoTotale(importoTotale);
 		importo.setImportoTotaleEuro(importoTotale);
+		
+		Tassa tassa = documento.getTassa();
+		tassa.setImponibile(imponibileTotale);
+		tassa.setImportoTassa(importoTotaleTassa);
 	}
 
 	public void updateModel() {
@@ -195,6 +215,7 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 			data[i][2] = prodotto.getUnitaMisura();
 			data[i][3] = prodotto.getPrezzo().getPrezzoCessione();
 			data[i][4] = prodotto.getImporto().getImponibile();
+			data[i][5] = i;
 		}
 		
 		// Update totals.
@@ -219,7 +240,8 @@ public class InvoiceDetailTableModel extends AbstractTableModel {
 		
 		// Retrieve tax percentage.
 		//
-		BigDecimal percentage = DecimalUtils.makeBigDecimalFromString(documento.getTassa().getPercentualeIva());
+		BigDecimal percentage = DecimalUtils.makeBigDecimalFromString(
+				documento.getTassa().getPercentualeIva());
 		percentage = percentage.divide(new BigDecimal(100));
 		
 		// Calculate total tax.
