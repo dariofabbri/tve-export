@@ -385,7 +385,7 @@ public class Analyzer {
 		
 		String s = extractor.extractIban(page);
 		
-		Pattern pattern = Pattern.compile("\\s*IBAN\\s+:\\s+(IT\\w+)\\W*");
+		Pattern pattern = Pattern.compile("\\s*IBAN\\s*:\\s+(IT\\w+)\\W*");
 		Matcher matcher = pattern.matcher(s);
 		
 		return matcher.matches() ? matcher.group(1) : null; 		
@@ -494,7 +494,7 @@ public class Analyzer {
 			return null;
 		}
 				
-		Pattern pattern = Pattern.compile(".*\\d+\\s+BON\\. \\d+ GG\\. DF\\. FM\\..*");
+		Pattern pattern = Pattern.compile(".*\\d+\\s+BON\\.\\s*\\d+\\s*GG\\.?\\s*DF\\.?\\s*FM\\.?.*");
 		Matcher matcher = pattern.matcher(s);
 		return matcher.matches() ? "BONIFICO" : null; 		
 	}
@@ -508,7 +508,7 @@ public class Analyzer {
 			return null;
 		}
 				
-		Pattern pattern = Pattern.compile(".*\\d+\\s+BON\\. \\d+ GG\\. DF\\. FM\\..*");
+		Pattern pattern = Pattern.compile(".*\\d+\\s+BON\\.\\s*\\d+\\s*GG\\.?\\s*DF\\.?\\s*FM\\.?.*");
 		Matcher matcher = pattern.matcher(s);
 		return matcher.matches() ? "FINE_MESE_DATA_FATTURA" : null; 		
 	}
@@ -522,7 +522,7 @@ public class Analyzer {
 			return null;
 		}
 				
-		Pattern pattern = Pattern.compile(".*\\d+\\s+BON\\. (\\d+) GG\\. DF\\. FM\\..*");
+		Pattern pattern = Pattern.compile(".*\\d+\\s+BON\\.\\s*(\\d+)\\s*GG\\.?\\s*DF\\.?\\s*FM\\.?.*");
 		Matcher matcher = pattern.matcher(s);
 		return matcher.matches() ? Integer.parseInt(matcher.group(1)) : null; 		
 	}

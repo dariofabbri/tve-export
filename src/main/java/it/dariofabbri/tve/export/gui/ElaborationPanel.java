@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -47,6 +48,17 @@ public class ElaborationPanel extends JPanel {
 	private JButton exportProduzioneButton;
 	private JButton exportTestButton;
 	private JButton modifyButton;
+
+	private static JFileChooser loadFileChooser;
+	private static JFileChooser saveFileChooser;
+	
+	static {
+		Boolean old = UIManager.getBoolean("FileChooser.readOnly");  
+		UIManager.put("FileChooser.readOnly", Boolean.TRUE);  
+		loadFileChooser = new JFileChooser();  
+		saveFileChooser = new JFileChooser();
+		UIManager.put("FileChooser.readOnly", old);  
+	}
 
 	
 	public ElaborationPanel() {
@@ -181,11 +193,10 @@ public class ElaborationPanel extends JPanel {
 
 		// Open file chooser.
 		//
-		JFileChooser fileChooser = new JFileChooser();
-		if(fileChooser.showOpenDialog(ElaborationPanel.this) != JFileChooser.APPROVE_OPTION) {
+		if(loadFileChooser.showOpenDialog(ElaborationPanel.this) != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		File file = fileChooser.getSelectedFile();
+		File file = loadFileChooser.getSelectedFile();
 		
 		// Set wait cursor.
 		//
@@ -340,13 +351,12 @@ public class ElaborationPanel extends JPanel {
 
 		// Open file chooser.
 		//
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setDialogTitle("Selezione cartella di esportazione");
-		if(fileChooser.showDialog(ElaborationPanel.this, "Seleziona cartella") != JFileChooser.APPROVE_OPTION) {
+		saveFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		saveFileChooser.setDialogTitle("Selezione cartella di esportazione");
+		if(saveFileChooser.showDialog(ElaborationPanel.this, "Seleziona cartella") != JFileChooser.APPROVE_OPTION) {
 			return;
 		}
-		File file = fileChooser.getSelectedFile();
+		File file = saveFileChooser.getSelectedFile();
 
 		
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
