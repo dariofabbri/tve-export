@@ -8,9 +8,16 @@ import it.dariofabbri.tve.export.model.RiferimentoDocumento;
 import it.dariofabbri.tve.export.service.configurator.Configuration;
 import it.dariofabbri.tve.export.service.configurator.Configurator;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -103,6 +110,10 @@ public class Marshaller {
 	
 	public void generateXml(List<Documento> documenti, Date creationDate, OutputStream os) {
 		
+		// Prepare temporary in-memory output-stream.
+		//
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
 		// Create messaggio object to be marshalled.
 		//		
 		Messaggio messaggio = createMessaggio(documenti, creationDate);
@@ -114,11 +125,46 @@ public class Marshaller {
 		    javax.xml.bind.Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		    jaxbMarshaller.setProperty(javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-		    jaxbMarshaller.marshal(messaggio, os);
+		    jaxbMarshaller.marshal(messaggio, baos);
+		    
+		    baos.flush();
 		    
 		} catch(Exception e) {
 			
 			throw new RuntimeException("Exception caught while using JAXB to marshal messaggio object.", e);
+		}
+		
+		// Post-process XML header.
+		//
+		postProcessXml(new ByteArrayInputStream(baos.toByteArray()), os);
+	}
+	
+	
+	private void postProcessXml(InputStream is, OutputStream os) {
+		
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+
+			br.readLine();
+			br.readLine();
+			
+			bw.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>");
+			bw.newLine();
+			bw.write("<Messaggio xmlns=\"http://www.iconamanagement.com\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.iconamanagement.com fattura.xsd\">");
+			bw.newLine();
+			
+			int c;
+			while((c = br.read()) >= 0) {
+				bw.write(c);
+			}
+			
+			bw.flush();
+			bw.close();
+			
+		} catch(Exception e) {
+			
+			throw new RuntimeException("Exception caught while postprocessing XML document.", e);			
 		}
 	}
 	
@@ -153,7 +199,7 @@ public class Marshaller {
 		RiferimentoDocumento riferimentoDocumento = new RiferimentoDocumento();
 		riferimentoDocumento.setTipoDocumento("SERVIZI");
 		riferimentoDocumento.setDataDocumento("");
-		riferimentoDocumento.setNumeroDocumento("");
+		riferimentoDocumento.setNumeroDocumento(null);
 		
 		// Iterate on passed list and perform injection.
 		//
